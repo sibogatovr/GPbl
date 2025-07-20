@@ -1,0 +1,28 @@
+<div style="max-width: 1200px; margin: 32px auto; display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start;">
+  <!-- Левая колонка: поиск + результаты + все офферы (табы) -->
+  <div style="flex: 2 1 400px; min-width: 340px; display: flex; flex-direction: column; gap: 24px;">
+    <div style="background: #fff; border-radius: 8px; box-shadow: 0 2px 8px #0001; padding: 24px 32px;">
+      <app-search-bar (search)="onSearch($event)"></app-search-bar>
+      <nz-tabset [(nzSelectedIndex)]="selectedTabIndex">
+        <nz-tab nzTitle="Результаты поиска">
+          <div *ngIf="loading" style="margin: 16px 0;">Загрузка...</div>
+          <app-offer-list [offers]="offers"></app-offer-list>
+          <div *ngIf="!loading && offers.length > 0" style="margin-top: 8px;">
+            Всего записей: {{ totalCount }}
+          </div>
+        </nz-tab>
+        <nz-tab nzTitle="Все офферы">
+          <app-all-offers></app-all-offers>
+        </nz-tab>
+      </nz-tabset>
+    </div>
+  </div>
+
+  <!-- Правая колонка: популярные поставщики -->
+  <div style="flex: 1 1 260px; min-width: 260px;">
+    <div style="background: #fff; border-radius: 8px; box-shadow: 0 2px 8px #0001; padding: 24px 32px;">
+      <app-popular-suppliers></app-popular-suppliers>
+    </div>
+  </div>
+</div>
+<router-outlet></router-outlet>

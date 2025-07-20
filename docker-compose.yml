@@ -1,0 +1,47 @@
+﻿services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=1qaz@WSX
+      - MSSQL_PID=Express
+    ports:
+      - "11433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+    restart: unless-stopped
+    networks:
+      - gpbl-network
+
+  backend:
+    image: 1strinat/gpbl-backend
+    container_name: gpbl-backend
+    ports:
+      - "15228:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DatabaseConnection=Server=mssql,1433;Database=GpblDb;User Id=sa;Password=1qaz@WSX;TrustServerCertificate=True
+    depends_on:
+      - mssql
+    restart: unless-stopped
+    networks:
+      - gpbl-network
+
+  frontend:
+    image: 1strinat/gpbl-frontend
+    container_name: gpbl-frontend
+    ports:
+      - "18080:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - gpbl-network
+
+volumes:
+  mssql_data:
+
+networks:
+  gpbl-network:
+    driver: bridge
